@@ -134,8 +134,6 @@ public class MQTTClient
 
     public void publish(String topic, String payload)
     {
-        //String topic = "tourifahrerwarner/nos/test";
-        //String payload = "the payload";
         byte[] encodedPayload = new byte[0];
 
         try

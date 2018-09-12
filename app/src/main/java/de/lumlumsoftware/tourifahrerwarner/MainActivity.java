@@ -13,6 +13,8 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import javax.xml.xpath.XPathConstants;
+
 class TFWarnerApplication extends Application
 {
     static MQTTClient mqttClient;
@@ -99,7 +101,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
                 Log.w("Debug",mqttMessage.toString());
-                Toast.makeText(MainActivity.this, mqttMessage.toString(), Toast.LENGTH_LONG).show();
+                String[] splittedTopic = topic.split("/");
+                String shownMsg = splittedTopic[splittedTopic.length-1] + ": " + mqttMessage.toString();
+                Toast.makeText(MainActivity.this, shownMsg, Toast.LENGTH_LONG).show();
             }
 
             @Override
