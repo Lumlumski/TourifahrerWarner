@@ -2,7 +2,7 @@
     <string name="app_name">Tourifahrer Warner</string>
     <string name="live_mode_button">Live mode</string>
     <string name="settings_button">Settings</string>
-    <string name="fullscreen_button">Fullscreen</string>
+    <string name="admin_mode_button">Admin mode</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->

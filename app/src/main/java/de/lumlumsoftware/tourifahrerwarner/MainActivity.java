@@ -1,5 +1,6 @@
 package de.lumlumsoftware.tourifahrerwarner;
 
+import android.app.Application;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,11 +13,31 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+class TFWarnerApplication extends Application
+{
+    static MQTTClient mqttClient;
+
+    public static void setMqttClient(MQTTClient client)
+    {
+        mqttClient = client;
+    }
+
+    public static MQTTClient getMqttClient()
+    {
+        return mqttClient;
+    }
+}
+
 public class MainActivity extends AppCompatActivity
 {
     MQTTClient mqttClient;
+    void initializeMqttClient(MQTTClient client)
+    {
+        TFWarnerApplication.setMqttClient(client);
+    }
 
     Button liveModeBtn;
+    Button adminModeBtn;
     Button settingsBtn;
 
     @Override
@@ -36,6 +57,17 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        adminModeBtn = (Button)findViewById(R.id.adminModeBtn);
+        adminModeBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent adminModeIntent = new Intent(MainActivity.this, PublishActivity.class);
+                startActivity(adminModeIntent);
+            }
+        });
+
         settingsBtn = (Button)findViewById(R.id.settingsBtn);
         settingsBtn.setOnClickListener(new View.OnClickListener()
         {
@@ -52,6 +84,7 @@ public class MainActivity extends AppCompatActivity
 
     private void startMqtt(){
         mqttClient = new MQTTClient(getApplicationContext());
+        initializeMqttClient(mqttClient);
         mqttClient.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {

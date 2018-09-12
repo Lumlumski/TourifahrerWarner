@@ -13,6 +13,8 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.io.UnsupportedEncodingException;
+
 public class MQTTClient
 {
     MqttAndroidClient mqttAndroidClient;
@@ -54,6 +56,7 @@ public class MQTTClient
 
             }
         });
+
         connect();
     }
 
@@ -102,7 +105,6 @@ public class MQTTClient
         }
     }
 
-
     private void subscribeToTopic()
     {
         try
@@ -127,6 +129,25 @@ public class MQTTClient
         {
             System.err.println("Exceptionst subscribing");
             ex.printStackTrace();
+        }
+    }
+
+    public void publish(String topic, String payload)
+    {
+        //String topic = "tourifahrerwarner/nos/test";
+        //String payload = "the payload";
+        byte[] encodedPayload = new byte[0];
+
+        try
+        {
+            encodedPayload = payload.getBytes("UTF-8");
+            MqttMessage message = new MqttMessage(encodedPayload);
+            //message.setRetained(true);
+            mqttAndroidClient.publish(topic, message);
+        }
+        catch (UnsupportedEncodingException | MqttException e)
+        {
+            e.printStackTrace();
         }
     }
 }

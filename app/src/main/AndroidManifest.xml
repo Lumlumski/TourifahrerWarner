@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="de.lumlumsoftware.tourifahrerwarner.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,13 +21,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.lumlumsoftware.tourifahrerwarner.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name="de.lumlumsoftware.tourifahrerwarner.LiveModeActivity"
+            android:name=".LiveModeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_live_mode"
-            android:parentActivityName="de.lumlumsoftware.tourifahrerwarner.MainActivity"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/FullscreenTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -35,6 +35,8 @@
         </activity>
 
         <service android:name="org.eclipse.paho.android.service.MqttService" />
+
+        <activity android:name=".PublishActivity"></activity>
     </application>
 
 </manifest>
