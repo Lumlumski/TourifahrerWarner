@@ -9,6 +9,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.widget.ImageView;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -85,11 +90,29 @@ public class LiveModeActivity extends Activity {
         }
     };
 
+    MQTTClient mqttClient;
+    StatusData statusData;
+    ImageView closedForBikesImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mqttClient = TFWarnerApplication.getMqttClient();
+        statusData = TFWarnerApplication.getStatusData();
+
         setContentView(R.layout.activity_live_mode);
+
+        closedForBikesImage = findViewById(R.id.closedForBikesImage);
+        if (statusData.getStatusTrack() == StatusData.TrackStatus.CLOSED_FOR_BIKES)
+        {
+            closedForBikesImage.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            closedForBikesImage.setVisibility(View.INVISIBLE);
+        }
+
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -98,7 +121,6 @@ public class LiveModeActivity extends Activity {
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.imageView);
-
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {

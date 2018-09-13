@@ -8,6 +8,42 @@
     tools:context=".PublishActivity">
 
     <Button
+        android:id="@+id/sendTrackClosedForBikesBtn"
+        android:layout_width="136dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:background="@drawable/button_selector"
+        android:text="Closed for bikes"
+        android:textColor="@color/colorSecondary"
+        app:layout_constraintEnd_toStartOf="@+id/sendTrackClosedBtn"
+        app:layout_constraintStart_toEndOf="@+id/sendTrackOpenBtn"
+        app:layout_constraintTop_toBottomOf="@+id/sendInfoBtn" />
+
+    <Button
+        android:id="@+id/sendTrackClosedBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="64dp"
+        android:background="@drawable/button_selector"
+        android:text="Closed"
+        android:textColor="@color/colorSecondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sendInfoBtn" />
+
+    <Button
+        android:id="@+id/sendTrackOpenBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="64dp"
+        android:background="@drawable/button_selector"
+        android:text="Open"
+        android:textColor="@color/colorSecondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sendInfoBtn" />
+
+    <Button
         android:id="@+id/sendInfoBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

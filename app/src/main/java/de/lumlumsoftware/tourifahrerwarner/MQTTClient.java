@@ -6,7 +6,6 @@ import android.util.Log;
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -14,49 +13,20 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.io.UnsupportedEncodingException;
+import java.util.UUID;
 
 public class MQTTClient
 {
     MqttAndroidClient mqttAndroidClient;
-
+    final String clientId = "TFWarner_" + UUID.randomUUID().toString();
     final String serverUri = "tcp://broker.hivemq.com:1883";
-
-    final String clientId = "TourifahrerWarnerTestClient";
     final String subscriptionTopic = "tourifahrerwarner/nos/+";
-
     //final String username = "";
     //final String password = "";
 
     public MQTTClient(Context context)
     {
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
-        mqttAndroidClient.setCallback(new MqttCallbackExtended()
-        {
-            @Override
-            public void connectComplete(boolean b, String s)
-            {
-                Log.w("mqtt", s);
-            }
-
-            @Override
-            public void connectionLost(Throwable throwable)
-            {
-
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception
-            {
-                Log.w("Mqtt", mqttMessage.toString());
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken)
-            {
-
-            }
-        });
-
         connect();
     }
 
@@ -142,6 +112,7 @@ public class MQTTClient
             MqttMessage message = new MqttMessage(encodedPayload);
             //message.setRetained(true);
             mqttAndroidClient.publish(topic, message);
+            Log.w("Publish", "Publishing " + message);
         }
         catch (UnsupportedEncodingException | MqttException e)
         {

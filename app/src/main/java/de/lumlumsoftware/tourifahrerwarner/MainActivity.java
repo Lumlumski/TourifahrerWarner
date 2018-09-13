@@ -13,11 +13,10 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import javax.xml.xpath.XPathConstants;
-
 class TFWarnerApplication extends Application
 {
     static MQTTClient mqttClient;
+    static StatusData statusData;
 
     public static void setMqttClient(MQTTClient client)
     {
@@ -28,15 +27,22 @@ class TFWarnerApplication extends Application
     {
         return mqttClient;
     }
+
+    public static void setStatusData(StatusData data)
+    {
+        statusData = data;
+    }
+
+    public static StatusData getStatusData()
+    {
+        return statusData;
+    }
 }
 
 public class MainActivity extends AppCompatActivity
 {
     MQTTClient mqttClient;
-    void initializeMqttClient(MQTTClient client)
-    {
-        TFWarnerApplication.setMqttClient(client);
-    }
+    StatusData statusData;
 
     Button liveModeBtn;
     Button adminModeBtn;
@@ -47,6 +53,9 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        statusData = new StatusData();
+        TFWarnerApplication.setStatusData(statusData);
 
         liveModeBtn = (Button)findViewById(R.id.liveModeBtn);
         liveModeBtn.setOnClickListener(new View.OnClickListener()
@@ -84,30 +93,38 @@ public class MainActivity extends AppCompatActivity
         startMqtt();
     }
 
-    private void startMqtt(){
+    private void startMqtt()
+    {
         mqttClient = new MQTTClient(getApplicationContext());
-        initializeMqttClient(mqttClient);
-        mqttClient.setCallback(new MqttCallbackExtended() {
+        TFWarnerApplication.setMqttClient(mqttClient);
+        mqttClient.setCallback(new MqttCallbackExtended()
+        {
             @Override
-            public void connectComplete(boolean b, String s) {
+            public void connectComplete(boolean b, String s)
+            {
 
             }
 
             @Override
-            public void connectionLost(Throwable throwable) {
+            public void connectionLost(Throwable throwable)
+            {
 
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception
+            {
                 Log.w("Debug",mqttMessage.toString());
                 String[] splittedTopic = topic.split("/");
-                String shownMsg = splittedTopic[splittedTopic.length-1] + ": " + mqttMessage.toString();
+                String specificTopic = splittedTopic[splittedTopic.length-1];
+                String shownMsg = (specificTopic == "track") ? mqttMessage.toString() : splittedTopic[splittedTopic.length-1] + ": " + mqttMessage.toString();
+
                 Toast.makeText(MainActivity.this, shownMsg, Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+            public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken)
+            {
 
             }
         });

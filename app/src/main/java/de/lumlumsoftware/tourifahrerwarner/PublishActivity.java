@@ -21,6 +21,9 @@ public class PublishActivity extends AppCompatActivity
     Spinner trackPartSpinner;
     Spinner occurenceSpinner;
     Button sendInfoBtn;
+    Button sendTrackOpenBtn;
+    Button sendTrackClosedForBikesBtn;
+    Button sendTrackClosedBtn;
 
     String[] trackPartItems = new String[]{
             "Antoniusbuche"
@@ -64,15 +67,15 @@ public class PublishActivity extends AppCompatActivity
         setContentView(R.layout.activity_publish);
         mqttClient = TFWarnerApplication.getMqttClient();
 
-        trackPartSpinner = (Spinner)findViewById(R.id.trackPartSpinner);
+        trackPartSpinner = findViewById(R.id.trackPartSpinner);
         final ArrayAdapter<String> trackPartAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, trackPartItems);
         trackPartSpinner.setAdapter(trackPartAdapter);
 
-        occurenceSpinner = (Spinner)findViewById(R.id.occurenceSpinner);
+        occurenceSpinner = findViewById(R.id.occurenceSpinner);
         final ArrayAdapter<String> occurenceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, occurenceItems);
         occurenceSpinner.setAdapter(occurenceAdapter);
 
-        sendInfoBtn = (Button)findViewById(R.id.sendInfoBtn);
+        sendInfoBtn = findViewById(R.id.sendInfoBtn);
         sendInfoBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -81,6 +84,36 @@ public class PublishActivity extends AppCompatActivity
                 String topic = "tourifahrerwarner/nos/" + trackPartSpinner.getSelectedItem().toString();
                 String payload = occurenceSpinner.getSelectedItem().toString();
                 mqttClient.publish(topic, payload);
+            }
+        });
+
+        sendTrackOpenBtn = findViewById(R.id.sendTrackOpenBtn);
+        sendTrackOpenBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mqttClient.publish("tourifahrerwarner/nos/track", "open");
+            }
+        });
+
+        sendTrackClosedForBikesBtn = findViewById(R.id.sendTrackClosedForBikesBtn);
+        sendTrackClosedForBikesBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mqttClient.publish("tourifahrerwarner/nos/track", "closedForBikes");
+            }
+        });
+
+        sendTrackClosedBtn = findViewById(R.id.sendTrackClosedBtn);
+        sendTrackClosedBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mqttClient.publish("tourifahrerwarner/nos/track", "closed");
             }
         });
     }
