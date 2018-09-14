@@ -5,21 +5,26 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 import android.widget.ImageView;
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+
+import de.lumlumsoftware.tourifahrerwarner.backend.status.StatusData;
+import de.lumlumsoftware.tourifahrerwarner.backend.status.TrackStatus;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class LiveModeActivity extends Activity {
+public class LiveModeActivity extends Activity implements Observer
+{
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -90,28 +95,25 @@ public class LiveModeActivity extends Activity {
         }
     };
 
-    MQTTClient mqttClient;
-    StatusData statusData;
     ImageView closedForBikesImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mqttClient = TFWarnerApplication.getMqttClient();
-        statusData = TFWarnerApplication.getStatusData();
-
         setContentView(R.layout.activity_live_mode);
 
+        TFWarnerApplication.getStatusData().addObserver(this);
+
         closedForBikesImage = findViewById(R.id.closedForBikesImage);
-        if (statusData.getStatusTrack() == StatusData.TrackStatus.CLOSED_FOR_BIKES)
-        {
-            closedForBikesImage.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            closedForBikesImage.setVisibility(View.INVISIBLE);
-        }
+//        if (statusData.getStatusTrack() == StatusData.TrackStatus.CLOSED_FOR_BIKES)
+//        {
+//            closedForBikesImage.setVisibility(View.VISIBLE);
+//        }
+//        else
+//        {
+//            closedForBikesImage.setVisibility(View.INVISIBLE);
+//        }
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -198,5 +200,11 @@ public class LiveModeActivity extends Activity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    @Override
+    public void update(Observable o, Object arg)
+    {
+        Log.w("LiveMode", "I got a message from observable");
     }
 }

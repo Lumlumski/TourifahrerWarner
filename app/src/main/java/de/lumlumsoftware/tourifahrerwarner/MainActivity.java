@@ -1,6 +1,5 @@
 package de.lumlumsoftware.tourifahrerwarner;
 
-import android.app.Application;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,31 +12,10 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-class TFWarnerApplication extends Application
-{
-    static MQTTClient mqttClient;
-    static StatusData statusData;
+import de.lumlumsoftware.tourifahrerwarner.backend.MQTTClient;
+import de.lumlumsoftware.tourifahrerwarner.backend.status.StatusData;
+import de.lumlumsoftware.tourifahrerwarner.backend.status.TrackStatus;
 
-    public static void setMqttClient(MQTTClient client)
-    {
-        mqttClient = client;
-    }
-
-    public static MQTTClient getMqttClient()
-    {
-        return mqttClient;
-    }
-
-    public static void setStatusData(StatusData data)
-    {
-        statusData = data;
-    }
-
-    public static StatusData getStatusData()
-    {
-        return statusData;
-    }
-}
 
 public class MainActivity extends AppCompatActivity
 {
@@ -114,11 +92,18 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception
             {
-                Log.w("Debug",mqttMessage.toString());
+                Log.w("Debug", mqttMessage.toString());
                 String[] splittedTopic = topic.split("/");
                 String specificTopic = splittedTopic[splittedTopic.length-1];
-                String shownMsg = (specificTopic == "track") ? mqttMessage.toString() : splittedTopic[splittedTopic.length-1] + ": " + mqttMessage.toString();
 
+                StatusData statusData = TFWarnerApplication.getStatusData();
+
+                if (specificTopic == statusData.getTrackTopic())
+                {
+                    statusData.setTrackStatus(TrackStatus.getTrackStatusForString(mqttMessage.toString()));
+                }
+
+                String shownMsg = specificTopic + ": " + mqttMessage.toString();
                 Toast.makeText(MainActivity.this, shownMsg, Toast.LENGTH_LONG).show();
             }
 

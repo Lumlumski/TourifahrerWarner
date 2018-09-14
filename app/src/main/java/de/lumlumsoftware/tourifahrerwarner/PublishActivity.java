@@ -1,19 +1,13 @@
 package de.lumlumsoftware.tourifahrerwarner;
 
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import java.io.UnsupportedEncodingException;
+import de.lumlumsoftware.tourifahrerwarner.backend.MQTTClient;
 
 public class PublishActivity extends AppCompatActivity
 {

@@ -1,4 +1,4 @@
-package de.lumlumsoftware.tourifahrerwarner;
+package de.lumlumsoftware.tourifahrerwarner.backend;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,9 +13,10 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Observable;
 import java.util.UUID;
 
-public class MQTTClient
+public class MQTTClient extends Observable
 {
     MqttAndroidClient mqttAndroidClient;
     final String clientId = "TFWarner_" + UUID.randomUUID().toString();
